@@ -169,8 +169,8 @@ app.MapGet("/properties/v2/search", object (
             sort
         });
     })
-.WithName("SearchV2")
-.WithTags("Property");
+    .WithName("SearchV2")
+    .WithTags("Property");
 
 app.MapGet("/properties/v3/search",object (
         SearchPropertyV3Request request) => TypedResults.Ok(new
@@ -185,6 +185,27 @@ app.MapGet("/properties/v3/search",object (
         sort = request.SortBy
     }))
     .WithName("SearchV3")
+    .WithTags("Property");
+
+app.MapGet("/properties/v4/search",object (
+        string? searchText,
+        SearchLocation? location,
+        SearchFilter? filters,
+        int? pageNo,
+        int? pageSize,
+        SortType? sort,
+        HttpContext context) => TypedResults.Ok(new
+    {
+        searchText = searchText ?? string.Empty,
+        location = location,
+        propertyStatusFilter = filters?.PropertyTypeFilters,
+        memberTypeFilter = filters?.ShowOnlyIAmMeberOfGroup,
+        propertyTypeFilter = filters?.PropertyTypeFilters,
+        pageNo = pageNo,
+        pageSize = pageSize,
+        sort = sort?.ToString()
+    }))
+    .WithName("SearchV4")
     .WithTags("Property");
 
 app.Run();
